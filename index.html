@@ -3,13 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="theme-color" content="#11120f">
+    <title>New Perspective — Digital Portfolio</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --background: #11120f;
+            --foreground: #f3f0e8;
+            --muted: #9b9b91;
+            --accent: #c6f36b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            background: var(--background);
+        }
+
+        body {
+            margin: 0;
+            color: var(--foreground);
+            background: var(--background);
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .wrap {
+            width: 100%;
+        }
+
+        .section {
+            position: relative;
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100svh;
+            align-items: center;
+            overflow: hidden;
+            padding: 100px clamp(24px, 8vw, 128px);
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+
+        .section-inner {
+            width: min(100%, 1440px);
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 28px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 22px;
+            height: 1px;
+            background: var(--accent);
+            content: "";
+        }
+
+        .hero {
+            background:
+                radial-gradient(ellipse at 78% 48%, rgba(198, 243, 107, 0.1), transparent 34%),
+                var(--background);
+        }
+
+        .hero .section-inner {
+            position: relative;
+        }
+
+        .hero h1 {
+            max-width: 1000px;
+            margin: 0;
+            font-size: clamp(56px, 10.5vw, 150px);
+            font-weight: 500;
+            letter-spacing: -0.085em;
+            line-height: 0.98;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-copy {
+            max-width: 430px;
+            margin: 36px 0 0 auto;
+            color: var(--muted);
+            font-size: clamp(15px, 1.4vw, 18px);
+            line-height: 1.8;
+        }
+
+        .scroll-cue {
+            position: absolute;
+            bottom: 42px;
+            left: clamp(24px, 8vw, 128px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.14em;
+        }
+
+        .scroll-cue::before {
+            width: 1px;
+            height: 34px;
+            background: var(--accent);
+            content: "";
+        }
+
+        .profile {
+            background: #e8e7df;
+            color: #171813;
+        }
+
+        .profile .eyebrow {
+            color: #65665e;
+        }
+
+        .profile h2,
+        .session h2 {
+            max-width: 1050px;
+            margin: 0;
+            font-size: clamp(42px, 7.3vw, 104px);
+            font-weight: 500;
+            letter-spacing: -0.075em;
+            line-height: 1.08;
+        }
+
+        .profile h2 span {
+            color: #718d40;
+        }
+
+        .profile-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            max-width: 780px;
+            margin: 56px 0 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(23, 24, 19, 0.25);
+        }
+
+        .profile-detail p {
+            margin: 0;
+            color: #65665e;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .session {
+            background:
+                radial-gradient(ellipse at 18% 82%, rgba(198, 243, 107, 0.09), transparent 33%),
+                #171813;
+        }
+
+        .session h2 {
+            max-width: 850px;
+        }
+
+        .session h2 span {
+            color: var(--accent);
+        }
+
+        .session-bottom {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 32px;
+            margin-top: 64px;
+        }
+
+        .session-bottom p {
+            max-width: 420px;
+            margin: 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 24px;
+            padding: 17px 0;
+            border-bottom: 1px solid var(--accent);
+            color: var(--foreground);
+            font-size: 14px;
+            text-decoration: none;
+            transition: gap 220ms ease, color 220ms ease;
+        }
+
+        .contact-link:hover {
+            gap: 34px;
+            color: var(--accent);
+        }
+
+        .section-nav {
+            position: fixed;
+            z-index: 2;
+            top: 50%;
+            right: clamp(18px, 4vw, 56px);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transform: translateY(-50%);
+        }
+
+        .section-nav a {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            color: var(--muted);
+            transition: background-color 220ms ease, transform 220ms ease;
+        }
+
+        .section-nav a[aria-current="true"] {
+            transform: scale(1.35);
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .section.is-visible .eyebrow,
+        .section.is-visible h1,
+        .section.is-visible h2,
+        .section.is-visible .hero-copy,
+        .section.is-visible .profile-detail,
+        .section.is-visible .session-bottom {
+            animation: rise-in 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        .section.is-visible .hero-copy,
+        .section.is-visible .profile-detail,
+        .section.is-visible .session-bottom {
+            animation-delay: 120ms;
+        }
+
+        @keyframes rise-in {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .section {
+                padding: 88px 24px;
+            }
+
+            .hero-copy {
+                margin: 28px 0 0;
+            }
+
+            .scroll-cue {
+                left: 24px;
+                bottom: 28px;
+            }
+
+            .profile-detail {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-top: 36px;
+            }
+
+            .session-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                margin-top: 40px;
+            }
+
+            .section-nav {
+                right: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="wrap">
-        <section></section>
-        <section></section>
-        <section></section>
-    </div>
+    <nav class="section-nav" aria-label="섹션 이동">
+        <a href="#intro" aria-label="인트로로 이동" aria-current="true"></a>
+        <a href="#profile" aria-label="프로필로 이동"></a>
+        <a href="#session" aria-label="세션으로 이동"></a>
+    </nav>
+
+    <main class="wrap">
+        <section class="section hero is-visible" id="intro" aria-labelledby="intro-title">
+            <div class="section-inner">
+                <p class="eyebrow">Independent Digital Portfolio</p>
+                <h1 id="intro-title">새로운 시선을<br><span>만듭니다.</span></h1>
+                <p class="hero-copy">아이디어를 선명한 경험으로 연결합니다. 천천히 둘러보고, 다음 장면으로 이동해 보세요.</p>
+            </div>
+            <div class="scroll-cue" aria-hidden="true">SCROLL TO EXPLORE</div>
+        </section>
+
+        <section class="section profile" id="profile" aria-labelledby="profile-title">
+            <div class="section-inner">
+                <p class="eyebrow">01 / Profile</p>
+                <h2 id="profile-title">디자인과 기술,<br><span>그 사이의 가능성.</span></h2>
+                <div class="profile-detail">
+                    <p>복잡한 생각을 단순하고 매력적인 디지털 경험으로 풀어냅니다.</p>
+                    <p>관찰하고, 질문하고, 함께 더 나은 답을 만들어갑니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section session" id="session" aria-labelledby="session-title">
+            <div class="section-inner">
+                <p class="eyebrow">02 / Session</p>
+                <h2 id="session-title">다음 이야기를<br><span>함께 시작해요.</span></h2>
+                <div class="session-bottom">
+                    <p>새로운 프로젝트나 아이디어가 있다면 편하게 이야기를 나눠 주세요.</p>
+                    <a class="contact-link" href="mailto:hello@example.com">프로젝트 문의하기 <span aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll(".section");
+        const navLinks = document.querySelectorAll(".section-nav a");
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    entry.target.classList.remove("is-visible");
+                    return;
+                }
+
+                entry.target.classList.add("is-visible");
+                navLinks.forEach((link) => {
+                    const isCurrent = link.hash === `#${entry.target.id}`;
+                    if (isCurrent) {
+                        link.setAttribute("aria-current", "true");
+                    } else {
+                        link.removeAttribute("aria-current");
+                    }
+                });
+            });
+        }, { threshold: 0.55 });
+
+        sections.forEach((section) => observer.observe(section));
+    </script>
+ll
 </body>
 </html>
